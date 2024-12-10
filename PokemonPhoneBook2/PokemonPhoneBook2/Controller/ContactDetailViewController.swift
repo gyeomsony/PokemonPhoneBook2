@@ -55,6 +55,7 @@ class PhoneBookViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
+        existingContactEditing() // 기존 연락처
     }
     
     private func configureUI() {
@@ -97,7 +98,18 @@ class PhoneBookViewController: UIViewController {
             $0.top.equalTo(nameTextField.snp.bottom).offset(10)
             $0.leading.trailing.equalToSuperview().inset(20)
         }
+    }
+    // 기존 연락처 표시 로직
+    private func existingContactEditing() {
+        guard let contact = contact else { return }
         
+        title = contact.name
+        nameTextField.text = contact.name
+        phoneTextField.text = contact.phoneNumber
+        
+        if let imageData = contact.profileImage, let image = UIImage(data: imageData) {
+            profileImageView.image = image
+        }
     }
     
     @objc private func generateRandomImage() {
