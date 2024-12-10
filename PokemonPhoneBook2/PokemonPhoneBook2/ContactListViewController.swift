@@ -6,12 +6,10 @@
 //
 
 import UIKit
-import CoreData
 
 class ContactListViewController: UIViewController {
     
-    // Core Data context 객체를 가져와서 저장함
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    var contact: Contact?
     
     // 연락처 데이터를 담을 배열
     var contacts: [Contact] = []
@@ -65,6 +63,9 @@ class ContactListViewController: UIViewController {
     @objc private func didTapAddButton() {
         print("추가 버튼 눌림")
         let phoneBookVC = PhoneBookViewController()
+        
+        phoneBookVC.contact = self.contact// 수정하려는 연락처 전달
+        
         navigationController?.pushViewController(phoneBookVC, animated: true)
     }
     
@@ -72,10 +73,21 @@ class ContactListViewController: UIViewController {
 
 // UITableViewDelegate 확장 - TableView의 셀 높이를 설정
 extension ContactListViewController: UITableViewDelegate {
+    // 셀 클릭 시 실행되는 메서드
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let contact = contacts[indexPath.row] // 클릭된 연락처를 가져옴
+        
+        let phoneBookVC = PhoneBookViewController()
+        phoneBookVC.contact = contact // 수정할 연락처를 PhoneBookViewController에 전달
+        navigationController?.pushViewController(phoneBookVC, animated: true) // 수정 화면으로 이동
+    }
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80 // 각 셀의 높이
     }
 }
+
+
 
 // UITableViewDataSource 확장 - TableView의 데이터 설정
 extension ContactListViewController: UITableViewDataSource {

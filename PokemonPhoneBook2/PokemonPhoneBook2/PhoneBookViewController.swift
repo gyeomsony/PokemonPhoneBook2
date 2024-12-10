@@ -6,14 +6,12 @@
 //
 
 import UIKit
-import CoreData
+
 
 class PhoneBookViewController: UIViewController {
     
     var contact: Contact? // 수정할 연락처를 저장할 프로퍼티
     var isEditingContact: Bool = false
-    
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     private var selectedImageData: Data?
     
@@ -122,38 +120,32 @@ class PhoneBookViewController: UIViewController {
             return
         }
         
-        // 코어데이터에 연락처 저장
-        let newContact = Contact(context: context)
-        newContact.name = name
-        newContact.phoneNumber = phoneNumber
-        
         let currentDate = Date()
+        var imageData: Data? = nil
         
         // 이미지 데이터를 별도로 저장
         if let image = profileImageView.image,
-           let imageData = image.pngData() {
-            newContact.profileImage = imageData  // 프로필 이미지를 Data로 저장
-            
+           let imageDataTemp = image.pngData() {
+            imageData = imageDataTemp  // 프로필 이미지를 Data로 저장
             // 이미지 파일 이름 생성
             let imageName = "profile_\(currentDate.timeIntervalSince1970)"
-            saveImageToDocumentDirectory(imageData: imageData, imageName: imageName)
+            saveImageToDocumentDirectory(imageData: imageData!, imageName: imageName)
             
             // 확인을 위한 출력
-            if let savedImageData = newContact.profileImage {
-                print("저장된 이미지 데이터: \(savedImageData)")
-            }
+            print("저장된 이미지 데이터: \(String(describing: imageData))")
         }
         
-        do {
-            try context.save()
-            print("연락처 저장 완료")
-            navigationController?.popViewController(animated: true)
-        } catch {
-            print("\(error) 저장 실패")
-            showAlert(message: "연락처 저장에 실패했습니다.")
+        // contact가 nil일 경우 새 연락처 추가, 아니면 수정
+        if let existingContact = contact {
+            // 기존 연락처 수정
+            CoreDataManager.shared.updateContact(contact: existingContact, name: name, phoneNumber: phoneNumber, profileImage: imageData)
+        } else {
+            // 새 연락처 추가
+            CoreDataManager.shared.addContact(name: name, phoneNumber: phoneNumber, profileImage: imageData)
         }
+        
+        navigationController?.popViewController(animated: true)
     }
-    
     
     // 이미지 저장하는 함수
     func saveImageToDocumentDirectory(imageData: Data, imageName: String) {

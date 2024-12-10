@@ -11,7 +11,7 @@ import UIKit
 
 class CoreDataManager {
     
-    // 싱글톤 패턴으로 전체에서 접근 가능하게 함
+    // 전역에서 접근 가능하게 함
     static let shared = CoreDataManager()
     
     private init() {} // 외부에서 인스턴스를 생성하지 못하게 함
@@ -68,9 +68,4 @@ class CoreDataManager {
         saveContext()
     }
     
-    // 연락처 삭제
-    func deleteContact(contact: Contact) {
-        context.delete(contact)
-        saveContext()
-    }
 }
