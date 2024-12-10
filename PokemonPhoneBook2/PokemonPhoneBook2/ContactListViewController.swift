@@ -129,3 +129,4 @@ extension ContactListViewController: UITableViewDataSource {
         }
         return nil // 이미지 파일이 없으면 nil 반환
     }
+}
