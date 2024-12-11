@@ -68,4 +68,10 @@ class CoreDataManager {
         saveContext()
     }
     
+    // 연락처 삭제
+    func deleteContact(contact: Contact) {
+        context.delete(contact)
+        saveContext()
+    }
+    
 }

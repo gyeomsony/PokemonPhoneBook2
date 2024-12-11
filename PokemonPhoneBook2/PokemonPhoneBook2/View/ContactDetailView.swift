@@ -43,6 +43,13 @@ class ContactDetailView: UIView {
         return textField
     }()
     
+    let deleteButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("연락처 삭제", for: .normal)
+        button.setTitleColor(.red, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 22)
+        return button
+    }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -50,7 +57,7 @@ class ContactDetailView: UIView {
     }
     
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: coder)
     }
     
     
@@ -59,7 +66,8 @@ class ContactDetailView: UIView {
             profileImageView,
             randomButton,
             nameTextField,
-            phoneTextField
+            phoneTextField,
+            deleteButton
             
         ].forEach { addSubview($0) }
         
@@ -82,6 +90,11 @@ class ContactDetailView: UIView {
         phoneTextField.snp.makeConstraints {
             $0.top.equalTo(nameTextField.snp.bottom).offset(10)
             $0.leading.trailing.equalToSuperview().inset(20)
+        }
+        
+        deleteButton.snp.makeConstraints {
+            $0.bottom.equalToSuperview().inset(60)
+            $0.centerX.equalToSuperview()
         }
     }
 }

@@ -10,9 +10,9 @@ import UIKit
 class PhoneBookViewController: UIViewController {
     
     // MARK: - Properties
-    var contact: Contact?
-    var isEditingContact: Bool = false
-    private var selectedImageData: Data?
+    var contact: Contact? // 편집 중인 연락처 속성
+    var isEditingContact: Bool = false // 연락처가 편집 중인지 여부 확인
+    private var selectedImageData: Data? // 선택된 이미지 저장
     
     private let detailView = ContactDetailView()
     
@@ -20,7 +20,7 @@ class PhoneBookViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        existingContactEditing()
+        existingContactEditing() // 기존 연락처가 있으면 표시
         setupActions()
     }
     
@@ -41,6 +41,7 @@ class PhoneBookViewController: UIViewController {
     
     private func setupActions() {
         detailView.randomButton.addTarget(self, action: #selector(generateRandomImage), for: .touchUpInside)
+        detailView.deleteButton.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
     }
     
     // MARK: - Data Binding
@@ -54,6 +55,16 @@ class PhoneBookViewController: UIViewController {
         if let imageData = contact.profileImage, let image = UIImage(data: imageData) {
             detailView.profileImageView.image = image
         }
+    }
+    
+    @objc private func deleteButtonTapped() {
+        print("삭제 버튼 눌림")
+        
+        guard let contact = contact else { return }
+        
+        CoreDataManager.shared.deleteContact(contact: contact)
+        
+        navigationController?.popViewController(animated: true)
     }
     
     // MARK: - Actions

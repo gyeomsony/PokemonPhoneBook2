@@ -21,7 +21,6 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
-				View/PhoneBookView.swift,
 			);
 			target = 8E603D572D080C5F00919E0F /* PokemonPhoneBook2 */;
 		};
